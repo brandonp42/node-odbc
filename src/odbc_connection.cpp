@@ -1394,7 +1394,10 @@ class CallProcedureAsyncWorker : public ODBCAsyncWorker {
       }
 
       if (data->parameterCount != (SQLSMALLINT)data->storedRows.size()) {
-        SetError("[odbc] The number of parameters the procedure expects and and the number of passed parameters is not equal\0");
+        char errorString[255];
+        sprintf(errorString, "[odbc] The number of parameters the procedure expects and and the number of passed parameters is not equal, got %d but expected %d", data->parameterCount, (SQLSMALLINT)data->storedRows.size());
+        SetError(errorString);
+        // SetError("[odbc] The number of parameters the procedure expects and and the number of passed parameters is not equal\0");
         return;
       }
 
