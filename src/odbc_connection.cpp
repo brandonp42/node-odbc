@@ -1344,6 +1344,15 @@ class CallProcedureAsyncWorker : public ODBCAsyncWorker {
         #endif
         SetError(errorString);
         return;
+      } else if (data->storedRows.size() != 1) {
+        char errorString[255];
+        #ifndef UNICODE
+        sprintf(errorString, "[odbc] CallProcedureAsyncWorker::Execute: Stored procedure '%s' is ambiguous, found %d", combinedProcedureName, (SQLSMALLINT)data->storedRows.size());
+        #else
+        sprintf(errorString, "[odbc] CallProcedureAsyncWorker::Execute: Stored procedure '%S' is ambiguous, found %d", combinedProcedureName, (SQLSMALLINT)data->storedRows.size());
+        #endif
+        SetError(errorString);
+        return;
       }
 
       data->deleteColumns(); // delete data in columns for next result set
